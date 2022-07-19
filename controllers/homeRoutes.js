@@ -60,9 +60,9 @@ router.get('/dashboard', withAuth, async (req, res) => {
 
     const user = userData.get({ plain: true });
 
-    res.render('profile', {
+    res.render('dashboard', {
       ...user,
-      logged_in: true
+      logged_in: req.session.login_in
     });
   } catch (err) {
     res.status(500).json(err);
@@ -70,15 +70,31 @@ router.get('/dashboard', withAuth, async (req, res) => {
 });
 
 
-
 router.get('/login', (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect('/profile');
+    res.redirect('/dashboard');
     return;
   }
 
   res.render('login');
 });
+
+router.get('/create-blog', (req, res) => {
+  res.render('create-blog', {
+    logged_in: true
+  })
+});
+
+router.get("/edit-blog", (req, res) => {
+  const blog = {
+    id: "id",
+    title: "content",
+    author: "author",
+    date: "11/7/2022"
+  }
+})
+
+
 
 module.exports = router;
