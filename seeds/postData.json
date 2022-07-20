@@ -1,14 +1,14 @@
 [
   {
-    "title": "Music Near Me",
-    "content": "A mobile app that will send you notifications whenever a concert is playing in your area."
+    "title": "Kingdom Hearts Quiz",
+    "content": "If you are a huge nerd that loves Kingdom Hearts then try your knowledge on the quiz. Even the most experienced players will fumble on some questions. Careful with how you answer, you lose 5 seconds every time you get something wrong."
   },
   {
-    "title": "The Ultimate Tech Quiz",
-    "content": "A web app that will give users 10 new technical questions each day and track their progress in things like programming, cybersecurity, database architecture, and more!"
+    "title": "Password Generator",
+    "content": "Will create a password for you based on the criteria you choose! Choose from lowercase, uppercase, special characters and character length to create your own secure password."
   },
   {
-    "title": "Roll 'Em Up",
-    "content": "A game for Windows and macOS where players move a ball through a series of increasingly challenging mazes."
+    "title": "Interactive State Map",
+    "content": "This map will show you all of the sex education laws in the United States in 2021. "
   }
 ]

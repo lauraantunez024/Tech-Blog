@@ -1,100 +1,143 @@
-const router = require('express').Router();
-const { comments, User, post } = require('../models');
-const withAuth = require('../utils/auth');
+const router = require("express").Router();
+const { Post, Comment, User } = require("../models");
+const withAuth = require("../utils/auth");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     // Get all posts and JOIN with user data
     const postData = await Post.findAll({
       include: [
         {
           model: User,
-          attributes: ['name'],
+          attributes: ["username"],
         },
       ],
     });
 
     // Serialize data so the template can read it
-    const pages = postData.map((P) => P.get({ plain: true }));
+    const blogs = postData.map((post) => post.get({ plain: true }));
 
     // Pass serialized data and session flag into template
-    res.render('homepage', { 
-      pages, 
-      logged_in: req.session.logged_in 
+    console.log("blogs", blogs);
+    res.render("homepage", {
+      blogs,
+      logged_in: req.session.logged_in,
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
-
-// router.get('/project/:id', async (req, res) => {
-//   try {
-//     const projectData = await Project.findByPk(req.params.id, {
-//       include: [
-//         {
-//           model: User,
-//           attributes: ['name'],
-//         },
-//       ],
-//     });
-
-//     const project = projectData.get({ plain: true });
-
-//     res.render('project', {
-//       ...project,
-//       logged_in: req.session.logged_in
-//     });
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
 
 // Use withAuth middleware to prevent access to route
-router.get('/dashboard', withAuth, async (req, res) => {
+router.get("/dashboard", withAuth, async (req, res) => {
+  //router.get('/dashboard', async (req, res) => {
   try {
-    // Find the logged in user based on the session ID
-    const postData = await Post.findByPk(req.session.user_id, {
-      attributes: { exclude: ['password'] },
-      include: [{ model: Post }],
+    // Get all posts and JOIN with user data
+    const postData = await Post.findAll({
+      where: {
+        user_id: req.session.user_id,
+      },
+      
     });
 
-    const user = userData.get({ plain: true });
+    // Serialize data so the template can read it
 
-    res.render('dashboard', {
-      ...user,
-      logged_in: req.session.login_in
-    });
-  } catch (err) {
-    res.status(500).json(err);
+    // Pass serialized data and session flag into template
+
+    
+    const posts = postData.map((post) => post.get({ plain: true }));
+    console.log(postData);
+    res.render("dashboard", {posts, 
+    logged_in: req.session.logged_in,})
+
+    // res.json(posts);
+  } catch (error) {
+    res.redirect("login");
+  
   }
 });
 
-
-router.get('/login', (req, res) => {
+router.get("/login", (req, res) => {
   // If the user is already logged in, redirect the request to another route
   if (req.session.logged_in) {
-    res.redirect('/dashboard');
+    res.redirect("/dashboard");
     return;
   }
 
-  res.render('login');
+  res.render("login");
 });
 
-router.get('/create-blog', (req, res) => {
-  res.render('create-blog', {
-    logged_in: true
-  })
+router.get("/create-blog", (req, res) => {
+  // If the user is already logged in, redirect the request to another route
+  // if (req.session.logged_in) {
+  //   res.redirect('/profile');
+  //   return;
+  // }
+
+  res.render("create-blog", {
+    logged_in: true,
+  });
 });
 
 router.get("/edit-blog", (req, res) => {
+  // If the user is already logged in, redirect the request to another route
+  // if (req.session.logged_in) {
+  //   res.redirect('/profile');
+  //   return;
+  // }
+
   const blog = {
     id: "id",
-    title: "content",
+    title: "Dummy Title",
+    content: "Some Dummy text",
     author: "author",
-    date: "11/7/2022"
-  }
-})
+    date: "1/17/2022",
+  };
 
+  res.render("edit-blog", {
+    ...blog,
+    logged_in: true,
+  });
+});
 
+// router.get("/blogs/:id", (req, res) => {
+//   Post.findByPk(req.params.id)
+
+//     .then((postData) =>
+//     res.render("blog-page", {
+//       ...postData,
+//       logged_in: req.session.logged_in,
+//     }))
+//     .catch((err) => {
+//       console.log(err);
+//       res.status(500).json(err);
+//     });
+
+// });
+
+router.get("/blogs/:id", async (req, res) => {
+  const postData = await Post.findByPk(req.params.id, {
+    include: [
+      {
+        model: User,
+        attributes: ["username"],
+      },
+      {
+        model: Comment,
+        include: {
+          model: User,
+          attributes: ["username"],
+        },
+      },
+    ],
+  });
+
+  const blog = postData.get({ plain: true });
+
+  res.render("blogpage", {
+    ...blog,
+    logged_in: req.session.logged_in,
+  });
+});
 
 module.exports = router;

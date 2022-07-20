@@ -1,9 +1,13 @@
 <div class="row">
     <div class="card">
         <div class="card-body">
-        <form id="create-post-form" type="text"t>
-            <input id="create-post-title"type="text"/>
-            <textarea name="post-content" id="create-post-content" cols="30" rows="10"></textarea>
+        <form id="create-post-form" type="text">
+            <h3>Post Title:</h3>
+            <input id="create-post-title"type="text" style="display:block"/>
+            <br> <br>
+            <h4>Post Content:</h4>
+
+            <textarea name="post-content" id="create-post-content" style="display:block"></textarea>
             <button id="save-post-button">Save</button>
         </form>
         </div>
@@ -11,4 +15,4 @@
 </div>
 
 
-<script src='../models/post.js'></script>
+<script src='/models/post.js'></script>

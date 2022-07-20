@@ -7,7 +7,7 @@
       </p>
     </div>
     <div class="card-footer text-muted">
-      Posted by {{user.username}} <br>
+      Posted by {{user.name}} <br>
       {{createdAt}}
     </div>
   </div>
@@ -15,7 +15,7 @@
 
 <div class="row">
   <form id="comment-form">
-    <textarea name="comment-area" id="comment-text-area" cols="30" rows="10"></textarea>
+    <textarea name="comment-area" id="comment-text-area"></textarea>
     <button id="submitBtn">Submit</button>
   </form>
 </div>

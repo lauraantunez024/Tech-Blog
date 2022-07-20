@@ -1,17 +1,22 @@
-{{#if Posts}}
-    {{#each Posts as |post|}}
+
+  <nav>
+    
+        <a class="btn btn-info" href="/create-blog" style="display:block">Add Tech Post</a>
+        <br>
+        <a class="btn btn-info" href="/edit-blog" style="display:block">Edit Tech Post</a>
+        </nav>
+{{#if posts}}
+    {{#each posts as |post|}}
     <div class="row">
         <div class="card">
             <div class="card-body">
                 <p class="card-text">
-                    {{blog.content}}
+                    {{post.title}}
                 </p>
-                <a href="/blog-page.html"></a>
+                <a href="/blogpage.html"></a>
             </div>
             <div class="card-footer text-muted">
-                <a href="/edit-blog">Edit</a>
                 <button id="delete-post-button">Delete</button>
-                <a href="/create-blog">Add</a>
             </div>
         </div>
     </div>
