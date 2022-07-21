@@ -1,37 +1,42 @@
+const path = require('path');
+const express = require('express');
+const session = require('express-session');
+const exphbs = require('express-handlebars');
+const routes = require('./controllers');
+const helpers = require('./utils/helpers');
 
-const express = require("express");
-const session = require("express-session");
+const sequelize = require('./config/connection');
+const { Server } = require('http');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
-const exphbs = require("express-handlebars");
-const hbs = exphbs.create({});
-const path = require("path");
-
-const sequelize = require("./config/connection");
-const SequelizeStore = require("connect-session-sequelize")(session.Store);
-
-// Sets up the Express App
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
+
+// Set up Handlebars.js engine with custom helpers
+const hbs = exphbs.create({ helpers });
 
 const sess = {
-  secret: "Super secret secret",
+  secret: 'Super secret secret',
   cookie: {},
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({
-    db: sequelize,
-  }),
+    db: sequelize
+  })
 };
-app.use(session(sess));
-app.engine("handlebars", hbs.engine);
-app.set("view engine", "handlebars");
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
-app.use(require("./controllers"));
 
-// Starts the server to begin listening
-app.listen(PORT, () => {
-  console.log("Server listening on: http://localhost:" + PORT);
-  sequelize.sync({ force: false });
+app.use(session(sess));
+
+// Inform Express.js on which template engine to use
+app.engine('handlebars', hbs.engine);
+app.set('view engine', 'handlebars');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(routes);
+
+sequelize.sync({ force: false }).then(() => {
+  app.listen(PORT, () => console.log(`Now listening: on ${PORT}`));
 });
